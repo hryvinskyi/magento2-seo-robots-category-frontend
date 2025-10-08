@@ -1,0 +1,27 @@
+{
+    "name": "hryvinskyi/magento2-seo-robots-category-frontend",
+    "description": "SEO Robots Category Frontend for Magento 2",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Volodymyr Hryvinskyi",
+            "email": "volodymyr@hryvinskyi.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0|^8.1|^8.2",
+        "magento/framework": "^102.0|^103.0",
+        "magento/module-catalog": "^104.0",
+        "hryvinskyi/magento2-seo-robots-category": "*",
+        "hryvinskyi/magento2-seo-robots-frontend": "*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Hryvinskyi\\SeoRobotsCategoryFrontend\\": ""
+        }
+    }
+}

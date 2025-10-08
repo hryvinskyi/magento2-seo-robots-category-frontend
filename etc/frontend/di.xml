@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2025. All rights reserved.
+  ~ @author: Volodymyr Hryvinskyi <mailto:volodymyr@hryvinskyi.com>
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Hryvinskyi\SeoRobotsFrontend\Model\ApplyRobots">
+        <arguments>
+            <argument name="robotsProviders" xsi:type="array">
+                <item name="category_robots" xsi:type="object">Hryvinskyi\SeoRobotsCategoryFrontend\Model\CategoryRobotsProvider</item>
+            </argument>
+        </arguments>
+    </type>
+</config>
