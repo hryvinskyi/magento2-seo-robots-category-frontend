@@ -9,49 +9,45 @@ declare(strict_types=1);
 namespace Hryvinskyi\SeoRobotsCategoryFrontend\Model;
 
 use Hryvinskyi\SeoRobotsCategoryApi\Api\GetCategoryRobotsInterface;
-use Magento\Framework\App\HttpRequestInterface;
+use Hryvinskyi\SeoRobotsFrontend\Model\XRobotsProviderInterface;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Registry;
 
 /**
  * Provides X-Robots-Tag HTTP header directives based on category settings
  */
-class CategoryXRobotsProvider
+class CategoryXRobotsProvider implements XRobotsProviderInterface
 {
     /**
-     * @var GetCategoryRobotsInterface
+     * Default priority for category page X-Robots
      */
-    private $getCategoryRobots;
-
-    /**
-     * @var Registry
-     */
-    private $registry;
+    private const DEFAULT_PRIORITY = 1000;
 
     /**
      * @param GetCategoryRobotsInterface $getCategoryRobots
      * @param Registry $registry
+     * @param int $sortOrder
+     * @param int $priority
      */
     public function __construct(
-        GetCategoryRobotsInterface $getCategoryRobots,
-        Registry $registry
+        private readonly GetCategoryRobotsInterface $getCategoryRobots,
+        private readonly Registry $registry,
+        private readonly int $sortOrder = 100,
+        private readonly int $priority = self::DEFAULT_PRIORITY
     ) {
-        $this->getCategoryRobots = $getCategoryRobots;
-        $this->registry = $registry;
     }
 
     /**
-     * Get X-Robots-Tag directives for the current request
-     *
-     * @param HttpRequestInterface $request
-     * @return array Directive array or empty array if no category X-Robots applies
+     * @inheritDoc
      */
-    public function getXRobotsDirectives(HttpRequestInterface $request): array
+    public function getDirectives(RequestInterface $request): ?array
     {
         // Check if we're on a category page
         if ($request->getFullActionName() === 'catalog_category_view') {
             $category = $this->registry->registry('current_category');
             if ($category) {
-                return $this->getCategoryRobots->executeXRobots($category);
+                $directives = $this->getCategoryRobots->executeXRobots($category);
+                return !empty($directives) ? $directives : null;
             }
         }
 
@@ -59,10 +55,27 @@ class CategoryXRobotsProvider
         if ($request->getFullActionName() === 'catalog_product_view') {
             $product = $this->registry->registry('current_product');
             if ($product) {
-                return $this->getCategoryRobots->executeXRobotsForProduct($product);
+                $directives = $this->getCategoryRobots->executeXRobotsForProduct($product);
+                return !empty($directives) ? $directives : null;
             }
         }
 
-        return [];
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSortOrder(): int
+    {
+        return $this->sortOrder;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPriority(): int
+    {
+        return $this->priority;
     }
 }

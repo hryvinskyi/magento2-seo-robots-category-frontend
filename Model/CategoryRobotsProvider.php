@@ -19,25 +19,22 @@ use Magento\Framework\Registry;
 class CategoryRobotsProvider implements RobotsProviderInterface
 {
     /**
-     * @var GetCategoryRobotsInterface
+     * Default priority for category page robots
      */
-    private $getCategoryRobots;
-
-    /**
-     * @var Registry
-     */
-    private $registry;
+    private const DEFAULT_PRIORITY = 1000;
 
     /**
      * @param GetCategoryRobotsInterface $getCategoryRobots
      * @param Registry $registry
+     * @param int $sortOrder
+     * @param int $priority
      */
     public function __construct(
-        GetCategoryRobotsInterface $getCategoryRobots,
-        Registry $registry
+        private readonly GetCategoryRobotsInterface $getCategoryRobots,
+        private readonly Registry $registry,
+        private readonly int $sortOrder = 100,
+        private readonly int $priority = self::DEFAULT_PRIORITY
     ) {
-        $this->getCategoryRobots = $getCategoryRobots;
-        $this->registry = $registry;
     }
 
     /**
@@ -69,6 +66,14 @@ class CategoryRobotsProvider implements RobotsProviderInterface
      */
     public function getSortOrder(): int
     {
-        return 100;
+        return $this->sortOrder;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPriority(): int
+    {
+        return $this->priority;
     }
 }

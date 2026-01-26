@@ -6,6 +6,7 @@
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Register meta robots provider -->
     <type name="Hryvinskyi\SeoRobotsFrontend\Model\ApplyRobots">
         <arguments>
             <argument name="robotsProviders" xsi:type="array">
@@ -14,10 +15,12 @@
         </arguments>
     </type>
 
-    <!-- Plugin to inject category X-Robots-Tag directives -->
+    <!-- Register X-Robots-Tag provider -->
     <type name="Hryvinskyi\SeoRobotsFrontend\Model\GetXRobotsByRequest">
-        <plugin name="category_x_robots_provider"
-                type="Hryvinskyi\SeoRobotsCategoryFrontend\Plugin\GetXRobotsByRequestPlugin"
-                sortOrder="100"/>
+        <arguments>
+            <argument name="xrobotsProviders" xsi:type="array">
+                <item name="category_xrobots" xsi:type="object">Hryvinskyi\SeoRobotsCategoryFrontend\Model\CategoryXRobotsProvider</item>
+            </argument>
+        </arguments>
     </type>
 </config>
